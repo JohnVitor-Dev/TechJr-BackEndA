@@ -28,7 +28,7 @@ namespace SQLConect
             Console.WriteLine("O que deseja? ");
             Console.WriteLine("1 - Inserir Idendidade");
             Console.WriteLine("2 - Consultar Identidades");
-            Console.WriteLine("2 - Deletar Identidade");
+            Console.WriteLine("3 - Deletar Identidade");
             Console.WriteLine("4 - Sair");
             int Escolha = int.Parse(Console.ReadLine());
 
