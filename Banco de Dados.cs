@@ -1,134 +1,227 @@
-﻿using System.ComponentModel.Design;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Input;
-using System.Xml.Linq;
+using System.IO;
+using System.Net;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace SQLConect
 {
     public static class SqlServerConect
     {
-
+        private static string connectionString = "Server=localhost\\SQLEXPRESS;Database=Identidade;Trusted_Connection=True;";
+        private static HttpListener listener;
 
         public static void Main()
         {
-            string connectionString = "Server = JohnV\\SQLEXPRESS; Database = Identidade; Trusted_Connection = True;";
-            SqlConnection SqlConect = new SqlConnection(connectionString);
-
-            while(true)
-            {
-                Menu(SqlConect);
-            }
-
+            StartServer();
         }
 
-        public static void Menu(SqlConnection SqlConect)
+        public static void StartServer()
         {
-            Console.Clear();
-            Console.WriteLine("O que deseja? ");
-            Console.WriteLine("1 - Inserir Idendidade");
-            Console.WriteLine("2 - Consultar Identidades");
-            Console.WriteLine("3 - Deletar Identidade");
-            Console.WriteLine("4 - Sair");
-            int Escolha = int.Parse(Console.ReadLine());
+            string url = "http://localhost:8080/";
+            listener = new HttpListener();
+            listener.Prefixes.Add(url);
+            listener.Start();
 
-            switch(Escolha)
+            Console.WriteLine($"Servidor HTTP iniciado em {url}");
+
+            while (true)
             {
-                case 1:
-                    Inserir(SqlConect);
+                HttpListenerContext context = listener.GetContext();
+                ProcessRequest(context);
+            }
+        }
+
+        public static void ProcessRequest(HttpListenerContext context)
+        {
+            string httpMethod = context.Request.HttpMethod;
+
+            switch (httpMethod)
+            {
+                case "GET":
+                    HandleGetRequest(context);
                     break;
-                case 2:
-                    Consulta(SqlConect);
+                case "POST":
+                    HandlePostRequest(context);
                     break;
-                case 3:
-                    Deletar(SqlConect);
+                case "PUT":
+                    HandlePutRequest(context);
+                    break;
+                case "DELETE":
+                    HandleDeleteRequest(context);
                     break;
                 default:
-                    Environment.Exit(0);
+                    SendResponse(context, HttpStatusCode.MethodNotAllowed, "Método não permitido.");
                     break;
             }
         }
-        public static void Inserir(SqlConnection SqlConect)
+
+        public static void HandleGetRequest(HttpListenerContext context)
         {
-            Console.Clear();
-            Console.WriteLine("Insira seu nome: ");
-            string Nome = Console.ReadLine();
-            Console.WriteLine("Insira sua idade: ");
-            int Idade = int.Parse(Console.ReadLine());
-
-            SqlConect.Open();
-
-            string insertQuery = "INSERT INTO Identidade (Nome, Idade) VALUES (@Nome, @Idade)";
-            SqlCommand command = new SqlCommand(insertQuery, SqlConect);
-            command.Parameters.AddWithValue("@Nome", Nome);
-            command.Parameters.AddWithValue("@Idade", Idade);
-
-            int rowsAffected = command.ExecuteNonQuery();
-
-            // Verifique se a inserção foi bem-sucedida
-            if (rowsAffected > 0)
+            Console.WriteLine("Conexão Get Solicitada!");
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                Console.WriteLine("Inserção bem-sucedida!");
-            }
-            else
-            {
-                Console.WriteLine("Falha na inserção!");
-            }
+                connection.Open();
 
-            SqlConect.Close();
-            Console.WriteLine("\nPressione qualquer tecla para continuar!");
-            Console.ReadLine();
+                string selectQuery = "SELECT Id, Nome, Idade FROM Identidade";
+                SqlCommand command = new SqlCommand(selectQuery, connection);
+                SqlDataReader reader = command.ExecuteReader();
 
+                DataTable dataTable = new DataTable();
+                dataTable.Load(reader);
+
+                connection.Close();
+
+                string responseContent = DataTableToJson(dataTable);
+                SendResponse(context, HttpStatusCode.OK, responseContent);
+            }
         }
-        public static void Consulta(SqlConnection SqlConect)
+
+        public static void HandlePostRequest(HttpListenerContext context)
         {
-            Console.Clear();
-            SqlConect.Open();
+            Console.WriteLine("Conexão Post Solicitada!");
+            string requestBody = new StreamReader(context.Request.InputStream).ReadToEnd();
+            Identity identity = JsonToIdentity(requestBody);
 
-            string selectQuery = "SELECT Id, Nome, Idade FROM Identidade";
-            SqlCommand command = new SqlCommand(selectQuery, SqlConect);
-            SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                int Id = reader.GetInt32(0);
-                string nome = reader.GetString(1);
-                int idade = reader.GetInt32(2);
-                
+                connection.Open();
 
-                Console.WriteLine($"Id: {Id} = Nome: {nome}, Idade: {idade}");
+                string insertQuery = "INSERT INTO Identidade (Nome, Idade) VALUES (@Nome, @Idade)";
+                SqlCommand command = new SqlCommand(insertQuery, connection);
+                command.Parameters.AddWithValue("@Nome", identity.Nome);
+                command.Parameters.AddWithValue("@Idade", identity.Idade);
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (rowsAffected > 0)
+                {
+                    string responseContent = IdentityToJson(identity);
+                    SendResponse(context, HttpStatusCode.Created, responseContent);
+                }
+                else
+                {
+                    SendResponse(context, HttpStatusCode.InternalServerError, "Falha na inserção!");
+                }
             }
-            SqlConect.Close();
-            Console.WriteLine("\nPressione qualquer tecla para continuar!");
-            Console.ReadLine();
-
-
-
         }
-        public static void Deletar(SqlConnection SqlConect)
+
+        public static void HandlePutRequest(HttpListenerContext context)
         {
-            Console.Clear();
-            Console.WriteLine("Insira o Id: ");
-            int Id = int.Parse(Console.ReadLine());
+            Console.WriteLine("Conexão Put Solicitada!");
+            string requestBody = new StreamReader(context.Request.InputStream).ReadToEnd();
+            Identity identity = JsonToIdentity(requestBody);
 
-            SqlConect.Open();
+            int id = GetIdentityIdFromUrl(context.Request.Url);
 
-            string deleteQuery = "DELETE FROM Identidade WHERE Id = @Id";
-            SqlCommand command = new SqlCommand(deleteQuery, SqlConect);
-            command.Parameters.AddWithValue("@Id", Id);
-            int rowsAffected = command.ExecuteNonQuery();
-
-            if (rowsAffected > 0)
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                Console.WriteLine("Deleção bem-sucedida!");
+                connection.Open();
+
+                string updateQuery = "UPDATE Identidade SET Nome = @Nome, Idade = @Idade WHERE Id = @Id";
+                SqlCommand command = new SqlCommand(updateQuery, connection);
+                command.Parameters.AddWithValue("@Nome", identity.Nome);
+                command.Parameters.AddWithValue("@Idade", identity.Idade);
+                command.Parameters.AddWithValue("@Id", id);
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (rowsAffected > 0)
+                {
+                    string responseContent = IdentityToJson(identity);
+                    SendResponse(context, HttpStatusCode.OK, responseContent);
+                }
+                else
+                {
+                    SendResponse(context, HttpStatusCode.NotFound, "Nenhum registro encontrado para modificação!");
+                }
             }
-            else
+        }
+
+        public static void HandleDeleteRequest(HttpListenerContext context)
+        {
+            Console.WriteLine("Conexão Delete Solicitada!");
+            int id = GetIdentityIdFromUrl(context.Request.Url);
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                Console.WriteLine("Nenhum registro encontrado para deleção!");
+                connection.Open();
+
+                string deleteQuery = "DELETE FROM Identidade WHERE Id = @Id";
+                SqlCommand command = new SqlCommand(deleteQuery, connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (rowsAffected > 0)
+                {
+                    SendResponse(context, HttpStatusCode.OK, "");
+                }
+                else
+                {
+                    SendResponse(context, HttpStatusCode.NotFound, "Nenhum registro encontrado para deleção!");
+                }
+            }
+        }
+
+        public static int GetIdentityIdFromUrl(Uri url)
+        {
+            string[] segments = url.Segments;
+            string lastSegment = segments[segments.Length - 1];
+            int id = Convert.ToInt32(lastSegment);
+
+            return id;
+        }
+
+        public static string DataTableToJson(DataTable dataTable)
+        {
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            foreach (DataRow dr in dataTable.Rows)
+            {
+                Dictionary<string, object> row = new Dictionary<string, object>();
+                foreach (DataColumn col in dataTable.Columns)
+                {
+                    row[col.ColumnName] = dr[col];
+                }
+                rows.Add(row);
             }
 
-            SqlConect.Close();
-            Console.ReadLine();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(rows);
+        }
+
+        public static Identity JsonToIdentity(string json)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<Identity>(json);
+        }
+
+        public static string IdentityToJson(Identity identity)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(identity);
+        }
+
+        public static void SendResponse(HttpListenerContext context, HttpStatusCode statusCode, string responseContent)
+        {
+            byte[] buffer = Encoding.UTF8.GetBytes(responseContent);
+
+            context.Response.StatusCode = (int)statusCode;
+            context.Response.ContentLength64 = buffer.Length;
+            context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+            context.Response.OutputStream.Close();
+        }
+
+        public class Identity
+        {
+            public string Nome { get; set; }
+            public int Idade { get; set; }
         }
     }
 }
