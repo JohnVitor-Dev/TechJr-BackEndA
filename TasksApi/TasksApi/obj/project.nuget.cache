@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "xcyTt+5JtdTwwikpjRuVhWu4KYMGUtNzKqfJzT/xC75dHxrOE41sOaXGilYbyYLJdnH7guoJYvslCFc0ByOFtA==",
+  "success": true,
+  "projectFilePath": "D:\\Visual Studio\\Projetos\\TechJr-BackEndA\\TasksApi\\TasksApi\\TasksApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\7.0.9\\microsoft.aspnetcore.diagnostics.entityframeworkcore.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.9\\microsoft.entityframeworkcore.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.9\\microsoft.entityframeworkcore.abstractions.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.9\\microsoft.entityframeworkcore.analyzers.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\7.0.9\\microsoft.entityframeworkcore.inmemory.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\7.0.9\\microsoft.entityframeworkcore.relational.7.0.9.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "C:\\Users\\Moon\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
