@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Exponha a porta que sua API estará ouvindo.
-EXPOSE 80
+#EXPOSE 80
 
 # Comando para iniciar a aplicação ao executar o contêiner.
 ENTRYPOINT ["dotnet", "TasksApi.dll"]
