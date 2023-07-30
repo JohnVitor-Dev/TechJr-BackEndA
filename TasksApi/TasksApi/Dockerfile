@@ -1,33 +1,33 @@
-# Define a imagem base. Use a imagem oficial do SDK do .NET 7.0 para construir o aplicativo.
+
+# Define a base image. Use the official .NET SDK 7.0 image to build the application.
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 
-# Defina o diretório de trabalho dentro do contêiner.
+# Set the working directory inside the container.
 WORKDIR /app
 
-# Copie o arquivo do projeto e o arquivo csproj para o diretório de trabalho.
+# Copy the project file and csproj file to the working directory.
 COPY *.csproj ./
 
-# Restaure as dependências do projeto usando o dotnet CLI.
-RUN dotnet restore
+# Restore the project dependencies using the dotnet CLI.
+ dotRUNnet restore
 
-# Copie todo o código do projeto para o diretório de trabalho.
+# Copy all the project code to the working directory.
 COPY . ./
 
-# Compile o projeto para produzir o arquivo executável.
+# Compile the project to produce the executable file.
 RUN dotnet publish -c Release -o out
 
-# Define a imagem base para a implantação. Use a imagem oficial do runtime do .NET 7.0.
+# Define the base image for deployment. Use the official .NET runtime 7.0 image.
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
-# Defina o diretório de trabalho dentro do contêiner.
+# Set the working directory inside the container.
 WORKDIR /app
 
-# Copie o executável do projeto compilado a partir do estágio anterior.
+# Copy the compiled project executable from the previous stage.
 COPY --from=build-env /app/out .
 
-# Exponha as portas definidas para HTTP e HTTPS.
+# Expose the ports defined for HTTP and HTTPS.
 EXPOSE 8080
 
-# Comando para iniciar a aplicação ao executar o contêiner.
+# Command to start the application when running the container.
 ENTRYPOINT ["dotnet", "TasksApi.dll"]
-
