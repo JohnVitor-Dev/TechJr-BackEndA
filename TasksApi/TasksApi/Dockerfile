@@ -25,8 +25,13 @@ WORKDIR /app
 # Copie o executável do projeto compilado a partir do estágio anterior.
 COPY --from=build-env /app/out .
 
-# Exponha a porta que sua API estará ouvindo.
-EXPOSE 443
+# Defina as variáveis de ambiente para definir as portas.
+ENV HTTP_PORT 8080
+ENV HTTPS_PORT 443
+
+# Exponha as portas definidas para HTTP e HTTPS.
+EXPOSE $HTTP_PORT
+EXPOSE $HTTPS_PORT
 
 # Comando para iniciar a aplicação ao executar o contêiner.
 ENTRYPOINT ["dotnet", "TasksApi.dll"]
