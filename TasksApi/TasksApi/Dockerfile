@@ -9,7 +9,7 @@ WORKDIR /app
 COPY *.csproj ./
 
 # Restore the project dependencies using the dotnet CLI.
- dotRUNnet restore
+RUN dotnet restore
 
 # Copy all the project code to the working directory.
 COPY . ./
