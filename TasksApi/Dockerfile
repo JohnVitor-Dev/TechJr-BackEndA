@@ -18,5 +18,5 @@ COPY --from=build /app .
 # Expose port 80
 EXPOSE 80
 
-# Update the entrypoint to the correct DLL filename
-ENTRYPOINT ["dotnet", "tasksApi.dll"]
+# Update the entrypoint to the correct DLL filename and its path
+ENTRYPOINT ["dotnet", "TasksApi.dll"]
