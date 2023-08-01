@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Expose the ports defined for HTTP and HTTPS.
-EXPOSE 8080
+EXPOSE 80
 
 # Command to start the application when running the container.
 ENTRYPOINT ["dotnet", "TasksApi.dll"]
