@@ -1,21 +1,32 @@
-FROM mcr.microsoft.com/dotnet/sdk:2.1 AS build-env
+# Use a versão 7.0 do SDK do .NET Core como imagem base para compilar o aplicativo
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
+# Define o diretório de trabalho no contêiner
 WORKDIR /app
 
-COPY *.csproj ./
+# Copia os arquivos do projeto (*.csproj) para o diretório de trabalho
+COPY ./*.csproj ./
 
+# Restaura as dependências do projeto
 RUN dotnet restore
 
-COPY . .
+# Copia todos os arquivos do projeto para o diretório de trabalho
+COPY . ./
 
-RUN dotnet publish -c Release -o out
+# Compila o aplicativo
+RUN dotnet build -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:2.1
+# Define a imagem base para executar o aplicativo
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 
+# Define o diretório de trabalho para o aplicativo em execução
 WORKDIR /app
 
-COPY --from=build-env /app/out .
+# Copia os arquivos do aplicativo compilado (do estágio de compilação) para o diretório de trabalho do contêiner em execução
+COPY --from=build /app/out ./
 
+# Expõe a porta em que o aplicativo ASP.NET Core irá escutar
 EXPOSE 80
 
-ENTRYPOINT ["dotnet", "TasksApi.dll"]
+# Define o comando de inicialização do aplicativo
+CMD ["dotnet", "tasksbuild.dll"]
