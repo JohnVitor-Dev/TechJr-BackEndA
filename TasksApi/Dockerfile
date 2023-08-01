@@ -1,17 +1,22 @@
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /source
 
-# copy csproj and restore as distinct laye
+# copy csproj and restore as distinct layer
 COPY TasksApi/*.csproj .
-RUN dotnet restore --use-current-runtime
+RUN dotnet restore
 
-# copy everything else and build app
+# copy everything and else build app
 COPY TasksApi/. .
-RUN dotnet publish --use-current-runtime --self-contained false --no-restore -o /app
+RUN dotnet publish -c Release -o /app
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app .
+
+# Expose port 80
 EXPOSE 80
-ENTRYPOINT ["dotnet", "tasksbuild.dll"]
+
+# Update the entrypoint to the correct DLL filename
+ENTRYPOINT ["dotnet", "tasksApi.dll"]
