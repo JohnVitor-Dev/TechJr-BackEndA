@@ -14,12 +14,38 @@ A aplicação utiliza um banco de dados SQL Server para armazenar as identidades
 ## Como Executar o Projeto 🏃‍♂️💻
 Antes de executar o projeto, certifique-se de ter o [.NET 7.0 (SDK ou Runtime)](https://dotnet.microsoft.com/pt-br/download/dotnet/7.0) instalado em sua máquina.
 
-Existem duas maneiras de executar o projeto:
 
-### 1. Executável (Windows)
-Baixe o arquivo Executável_HTTPMethodsWithDB.zip da última versão do projeto a partir da página de [releases](https://github.com/seu-usuario-aqui/HTTPMethodsWithDB/releases). Em seguida, extraia e execute o arquivo do executável para iniciar o servidor HTTP.
+## Endpoints da API 🚀🔗
+### GET /
+Retorna a página inicial da API.
 
-### 2. Arquivos (Linux & Windows)
-Baixe o arquivo Arquivos_HTTPMethodsWithDB.zip da última versão do projeto a partir da página de [releases](https://github.com/seu-usuario-aqui/HTTPMethodsWithDB/releases) ou baixe pelo Wget na pasta que desejar.
-```shell
-wget https://github.com/seu-usuario-aqui/HTTPMethodsWithDB/releases/download/v1.0.0/Arquivos_HTTPMethodsWithDB.zip
+### GET /identidades
+Retorna uma lista com todas as identidades cadastradas.
+
+### POST /identidades
+Adiciona uma nova identidade à lista.
+
+Exemplo de requisição:
+```json
+{
+    "Nome": "João",
+    "Idade": 30
+}
+```
+
+### PUT /identidades/{id}
+Atualiza os detalhes de uma identidade existente com base no seu ID.
+
+Exemplo de requisição:
+```json
+{
+    "Nome": "Maria",
+    "Idade": 25
+}
+```
+
+### DELETE /identidades/{id}
+Remove uma identidade da lista com base no seu ID.
+
+## Observações 📝
+Este projeto é apenas uma aplicação de exemplo e não é recomendado para uso em produção. O objetivo é demonstrar a implementação dos HTTP methods em conjunto com um banco de dados SQL Server. Certifique-se de ajustar as configurações do banco de dados e segurança conforme as necessidades do seu projeto.
