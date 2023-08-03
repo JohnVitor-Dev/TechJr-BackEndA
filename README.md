@@ -10,7 +10,7 @@ O objetivo deste repositório é centralizar e armazenar todos os projetos de ap
 
 O repositório está organizado de forma simples e direta. Cada projeto está armazenado em seu próprio diretório, contendo o código-fonte e quaisquer outros recursos relevantes para o projeto. Além disso, um arquivo `README.md` em cada diretório fornece detalhes sobre o projeto, seus objetivos e as tecnologias utilizadas.
 
-
+##
 _Atenciosamente,_
 
 John Vitor - Chapter BackEndA(TechJr)
