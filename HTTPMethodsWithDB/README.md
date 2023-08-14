@@ -9,7 +9,7 @@ O projeto HTTPMethodsWithDB é uma aplicação de exemplo que demonstra o uso de
 - Microsoft.Data.SqlClient para a conexão com o banco de dados SQL Server
 
 ## Configuração do Banco de Dados 🗄️🔧
-A aplicação utiliza um banco de dados SQL Server para armazenar as identidades. A string de conexão com o banco de dados pode ser configurada no arquivo SqlServerConect.cs, na variável "connectionString".
+A aplicação utiliza um banco de dados SQL Server para armazenar as identidades. A string de conexão com o banco de dados pode ser configurada no arquivo config.json, na variável "ConnectionString".
 
 ## Como Executar o Projeto 🏃‍♂️💻
 Antes de executar o projeto, certifique-se de ter o [.NET 7.0 (SDK ou Runtime)](https://dotnet.microsoft.com/pt-br/download/dotnet/7.0) instalado em sua máquina.
