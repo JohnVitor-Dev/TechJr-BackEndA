@@ -6,17 +6,54 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SQLConect
 {
     public static class SqlServerConect
     {
-        private static string connectionString = "Server=localhost\\SQLEXPRESS;Database=Identidade;Trusted_Connection=True;";
+        public static string connectionString;
         private static HttpListener listener;
 
         public static void Main()
         {
+            connectionString = ReadConnectionStringDoArquivo();
+            Console.WriteLine(connectionString);
             StartServer();
+            
+        }
+
+        public static string ReadConnectionStringDoArquivo()
+        {
+            string nomeArquivo = "config.json";
+            string caminhoArquivo = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, nomeArquivo);
+            string serverPadrao = "Server=localhost\\SQLEXPRESS;Database=Identidade;Trusted_Connection=True;";
+
+            try
+            {
+                if (File.Exists(caminhoArquivo))
+                {
+                    string json = File.ReadAllText(caminhoArquivo);
+                    JObject config = JObject.Parse(json);
+                    string connectionString = config["ConnectionString"].ToString().Trim();
+
+                    if (!string.IsNullOrEmpty(connectionString))
+                    {
+                        Console.WriteLine($"Arquivo {nomeArquivo} encontrado!");
+                        Console.WriteLine($"Localização do Banco de Dados definido como: {connectionString}");
+                        return connectionString;
+                    }
+                }
+
+                Console.WriteLine($"Arquivo de configuração não encontrado em {caminhoArquivo}. Usando a string de conexão padrão: ({serverPadrao})");
+                return serverPadrao;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao ler o arquivo de configuração. Usando a string de conexão padrão: ({serverPadrao})");
+                Console.WriteLine(ex.Message);
+                return serverPadrao;
+            }
         }
 
         public static void StartServer()
@@ -62,6 +99,7 @@ namespace SQLConect
         public static void HandleGetRequest(HttpListenerContext context)
         {
             Console.WriteLine("Conexão Get Solicitada!");
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -72,6 +110,8 @@ namespace SQLConect
 
                 DataTable dataTable = new DataTable();
                 dataTable.Load(reader);
+
+                //Console.WriteLine("State: {0}", connection.State);
 
                 connection.Close();
 

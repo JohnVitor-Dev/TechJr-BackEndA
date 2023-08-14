@@ -4,6 +4,6 @@
     "\\TasksApi",
     "\\TasksApi\\TasksApi"
   ],
-  "SelectedNode": "\\TasksApi\\TasksApi\\Program.cs",
+  "SelectedNode": "\\TasksApi\\TasksApi\\TaskDb.cs",
   "PreviewInSolutionExplorer": false
 }
