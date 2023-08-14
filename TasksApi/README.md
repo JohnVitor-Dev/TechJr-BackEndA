@@ -54,7 +54,7 @@ Remove uma tarefa da lista com base no seu ID.
 A API utiliza um banco de dados em memória (In-Memory Database) para armazenar as tarefas. Portanto, não é necessário configurar um banco de dados externo.
 
 ## Como Executar o Projeto 🏃‍♂️💻
-Antes de executar verifique se você tem o [.NET 7.0 (SDK ou Runtime)](https://dotnet.microsoft.com/pt-br/download/dotnet/7.0) e o navegador Chrome instalados.
+Antes de executar verifique se você tem o [.NET 7.0 (SDK ou Runtime)](https://dotnet.microsoft.com/pt-br/download/dotnet/7.0) instalado.
 
 Para executar o projeto "TasksApi", você pode:
 
