@@ -19,7 +19,6 @@ namespace SQLConect
         {
             connectionString = ReadConnectionStringDoArquivo();
             StartServer();
-            
         }
 
         public static string ReadConnectionStringDoArquivo()
