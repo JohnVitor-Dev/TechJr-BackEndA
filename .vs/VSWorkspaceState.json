@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\TasksApi",
-    "\\TasksApi\\TasksApi"
+    "\\HTTPMethodsWithDB"
   ],
-  "SelectedNode": "\\TasksApi\\TasksApi\\TaskDb.cs",
+  "SelectedNode": "\\HTTPMethodsWithDB\\HTTPMethodsWithDB.sln",
   "PreviewInSolutionExplorer": false
 }

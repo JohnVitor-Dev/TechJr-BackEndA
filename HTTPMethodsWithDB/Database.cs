@@ -18,7 +18,6 @@ namespace SQLConect
         public static void Main()
         {
             connectionString = ReadConnectionStringDoArquivo();
-            Console.WriteLine(connectionString);
             StartServer();
             
         }
