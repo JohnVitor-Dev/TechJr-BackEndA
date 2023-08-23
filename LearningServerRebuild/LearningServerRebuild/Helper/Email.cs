@@ -18,9 +18,9 @@ namespace LearningServerRebuild.Helper
             {
                 string host = _configuration.GetValue<string>("SMTP:Host");
                 string nome = _configuration.GetValue<string>("SMTP:Nome");
-                string username = _configuration.GetValue<string>("SMTP:UserName");
-                string senha = _configuration.GetValue<string>("SMTP:Senha");
-                int porta = _configuration.GetValue<int>("SMTP:Porta");
+                string username = Environment.GetEnvironmentVariable("SMTP_USERNAME");
+                string senha = Environment.GetEnvironmentVariable("SMTP_SENHA");
+                int porta = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORTA"));
 
                 MailMessage mail = new MailMessage()
                 {

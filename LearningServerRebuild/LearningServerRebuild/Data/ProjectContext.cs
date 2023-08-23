@@ -12,9 +12,12 @@ namespace Project.Data
         {
             IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
+            .AddEnvironmentVariables()
             .AddJsonFile("appsettings.json", false, true)
             .Build();
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("ProjectContext"));
+
+            string connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS_PROJECTCONTEXT");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         public DbSet<Users> User { get; set; }

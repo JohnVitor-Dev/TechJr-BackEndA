@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ProjectContext>();
 builder.Services.AddScoped<IEmail, Email>();
 
-var key = Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Jwt")["Key"]);
+var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"));
 
 builder.Services.AddAuthentication(x =>
 {
